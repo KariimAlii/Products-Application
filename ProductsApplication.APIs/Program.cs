@@ -17,10 +17,13 @@ namespace ProductsApplication.APIs
             builder.Services.AddSwaggerGen();
             #endregion
 
+            #region Configure Upload
             builder.Services.Configure<FormOptions>(options =>
             {
                 options.MultipartBodyLengthLimit = 52428800; // 50 MB
-            });
+            }); 
+            #endregion
+
             #region Cors Service
             var PolicyName = "_PolicyName";
             builder.Services.AddCorsServices(PolicyName);

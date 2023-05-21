@@ -8,7 +8,7 @@ namespace ProductsApplication.APIs
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "Manager")]
+    [Authorize(Policy = "Administrator")]
     public class ProductsController : ControllerBase
     {
         #region Fields & Constructor
