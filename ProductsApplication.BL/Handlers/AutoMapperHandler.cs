@@ -15,7 +15,6 @@ namespace ProductsApplication.BL
                CreateMap<Product, ProductReadDto>();
                CreateMap<Product, ProductReadDto>();
                CreateMap<ProductAddDto, Product>();
-               CreateMap<ProductUpdateDto, Product>();
         }
     }
 }
