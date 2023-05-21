@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProductsApplication.DAL
 {
-    internal class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
         #region Fields
         private readonly ProductsApplicationContext context;
@@ -21,13 +21,12 @@ namespace ProductsApplication.DAL
         #region Methods
         public async Task<IEnumerable<TEntity>> GetAll()
         {
-            return await context.Set<TEntity>().AsNoTracking().ToListAsync(); // ReadOnly
+            return await context.Set<TEntity>().AsNoTracking().ToListAsync();
         }
 
-        public async Task<TEntity?> GetById(int id)
+        public async Task<TEntity> GetById(int id)
         {
-            return await context.Set<TEntity>().FindAsync(id); // You cannot use .AsNoTracking()
-            //return context.Set<TEntity>().FirstOrDefault(id).AsNoTracking(); // You can use .AsNoTracking()
+            return await context.Set<TEntity>().FindAsync(id);
         }
 
         public async Task Add(TEntity entity)
@@ -43,10 +42,7 @@ namespace ProductsApplication.DAL
         {
             context.Set<TEntity>().Remove(entity);
         }
-        public async Task<int> SaveChanges()
-        {
-            return await context.SaveChangesAsync();
-        }
+
         #endregion
     }
 }

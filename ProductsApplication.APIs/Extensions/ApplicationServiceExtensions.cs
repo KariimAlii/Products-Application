@@ -5,12 +5,12 @@ namespace ProductsApplication.APIs
 {
     public static class ApplicationServiceExtensions
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, ConfigurationManager config)
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            //services.BuildServiceProvider().GetService<IConfiguration>().GetConnectionString()
+            
             services.AddDbContext<ProductsApplicationContext>(options =>
             {
-                string? LocalConnectionString = config.GetConnectionString("LocalConnectionString");
+                var LocalConnectionString = services.BuildServiceProvider().GetService<IConfiguration>().GetConnectionString("LocalConnectionString");
                 options.UseSqlServer(LocalConnectionString);
             });
             return services;

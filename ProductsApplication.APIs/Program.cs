@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http.Features;
+using AutoMapper;
 namespace ProductsApplication.APIs
 {
     public class Program
@@ -12,12 +14,40 @@ namespace ProductsApplication.APIs
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(); 
+            builder.Services.AddSwaggerGen();
             #endregion
 
-            var app = builder.Build();
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 52428800; // 50 MB
+            });
+            #region Cors Service
+            var PolicyName = "_PolicyName";
+            builder.Services.AddCorsServices(PolicyName);
+            #endregion
+
+            #region AutoMapper Service
+            builder.Services.AddAutoMapperServices(); 
+            #endregion
+
+            #region Identity Service
+            builder.Services.AddIdentityServices();
+            #endregion
+
+            #region Authentication Service
+            builder.Services.AddAuthenticationServices();
+            #endregion
+
+            #region Authorization Service
+            builder.Services.AddAuthorizationServices();
+            #endregion
+
             #region Context Service
-            builder.Services.AddApplicationServices(builder.Configuration);
+            builder.Services.AddApplicationServices();
+            #endregion
+
+            #region Tokens Service
+            builder.Services.AddTokenServices();
             #endregion
 
             #region Managers Service
@@ -27,21 +57,34 @@ namespace ProductsApplication.APIs
             #region Repos Service
             builder.Services.AddRepoServices();
             #endregion
-            // Configure the HTTP request pipeline.
+
+            var app = builder.Build();
+
+            #region HTTP request Pipeline
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                context.Response.Headers.Add("Access-Control-Allow-Methods", "*");
+                context.Response.Headers.Add("Access-Control-Allow-Headers", "*");
+                context.Response.Headers.Add("Access-Control-Max-Age", "86400");
+                await next();
+            });
             app.UseHttpsRedirection();
+            app.UseCors(PolicyName);
 
-            app.UseAuthorization();
+            app.UseAuthentication(); // First
+            app.UseAuthorization(); // Second
 
 
             app.MapControllers();
 
-            app.Run();
+            app.Run(); 
+            #endregion
         }
     }
 }
