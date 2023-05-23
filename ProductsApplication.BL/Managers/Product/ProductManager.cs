@@ -49,11 +49,8 @@ namespace ProductsApplication.BL
             if (ProductFromDB == null)
                 return false;
 
-            ProductFromDB.Name = productDto.Name;
-            ProductFromDB.Description = productDto.Description;
-            ProductFromDB.Price = productDto.Price;
-            ProductFromDB.Image = productDto.Image;
 
+            mapper.Map(productDto, ProductFromDB);
 
             unitOfWork.productRepo.Update(ProductFromDB);
 
