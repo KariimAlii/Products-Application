@@ -13,8 +13,8 @@ namespace ProductsApplication.BL
         public AutoMapperHandler()
         {
                CreateMap<Product, ProductReadDto>();
-               CreateMap<Product, ProductReadDto>();
                CreateMap<ProductAddDto, Product>();
+               CreateMap<ProductUpdateDto,Product>();
         }
     }
 }
